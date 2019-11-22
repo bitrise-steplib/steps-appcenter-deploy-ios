@@ -114,7 +114,7 @@ outputs:
       title: "Install URL of the newly deployed version"
       summary: ""
       description: ""
-  - APPCENTER_DEPLOY_DOOWNLOAD_URL: ""
+  - APPCENTER_DEPLOY_DOWNLOAD_URL: ""
     opts:
       title: "Download URL of the newly deployed version"
       summary: ""

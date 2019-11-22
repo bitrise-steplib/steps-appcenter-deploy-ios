@@ -7,8 +7,11 @@ import (
 
 	"github.com/bitrise-io/appcenter"
 	"github.com/bitrise-io/go-steputils/stepconf"
+	"github.com/bitrise-io/go-steputils/tools"
 	"github.com/bitrise-io/go-utils/log"
 )
+
+const statusEnvKey = "APPCENTER_DEPLOY_STATUS"
 
 type config struct {
 	Debug              bool            `env:"debug,required"`
@@ -27,6 +30,11 @@ type config struct {
 
 func failf(f string, args ...interface{}) {
 	log.Errorf(f, args...)
+
+	if err := tools.ExportEnvironmentWithEnvman(statusEnvKey, "failed"); err != nil {
+		log.Errorf("Failed to export environment variable: %s with value: %s. Error: %s", statusEnvKey, "failed", err)
+	}
+
 	os.Exit(1)
 }
 
@@ -70,6 +78,8 @@ func main() {
 
 	log.Infof("Setting distribution group(s)")
 
+	var publicGroup string
+
 	for _, groupName := range strings.Split(cfg.DistributionGroup, "\n") {
 		groupName = strings.TrimSpace(groupName)
 
@@ -86,6 +96,10 @@ func main() {
 
 		if err := release.AddGroup(group, cfg.Mandatory, cfg.NotifyTesters); err != nil {
 			failf("Failed to add group(%s) to the release, error: %s", groupName, err)
+		}
+
+		if group.IsPublic {
+			publicGroup = groupName
 		}
 	}
 
@@ -131,6 +145,28 @@ func main() {
 			failf("Failed to add tester(%s) to the release, error: %s", email, err)
 		}
 
+	}
+
+	log.Donef("- Done")
+	fmt.Println()
+
+	log.Infof("Exporting outputs")
+
+	var outputs = map[string]string{
+		statusEnvKey:                    "success",
+		"APPCENTER_DEPLOY_INSTALL_URL":  release.InstallURL,
+		"APPCENTER_DEPLOY_DOWNLOAD_URL": release.DownloadURL,
+	}
+
+	if len(publicGroup) > 0 {
+		outputs["APPCENTER_PUBLIC_INSTALL_PAGE_URL"] = fmt.Sprintf("https://install.appcenter.ms/users/%s/apps/%s/distribution_groups/%s", cfg.OwnerName, cfg.AppName, publicGroup)
+	}
+
+	for key, value := range outputs {
+		log.Printf("- %s: %s", key, value)
+		if err := tools.ExportEnvironmentWithEnvman(key, value); err != nil {
+			failf("Failed to export environment variable: %s with value: %s. Error: %s", key, value, err)
+		}
 	}
 
 	log.Donef("- Done")

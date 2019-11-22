@@ -10,6 +10,6 @@ workflows:
           - api_token: $TOKEN
           - owner_name: $OWNER
           - app_name: $APPNAME
-          - debug: "yes"
-          - distribution_group: "public3test\nCollaborators"
+          - debug: "no"
+          - distribution_group: "publictest\nCollaborators"
           - dsym_zip_path: "/Users/tamaspapik/Downloads/ios-xcode-8.0.dSYM.zip"
