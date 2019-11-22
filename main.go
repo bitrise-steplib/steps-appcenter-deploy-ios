@@ -47,7 +47,7 @@ func main() {
 		failf("Failed to create new release, error: %s", err)
 	}
 
-	log.Donef(" - Done")
+	log.Donef("- Done")
 	fmt.Println()
 
 	if len(cfg.DSYMPath) > 0 {
@@ -55,7 +55,7 @@ func main() {
 		if err := release.UploadSymbol(cfg.DSYMPath); err != nil {
 			failf("Failed to upload symbol file(%s), error: %s", cfg.DSYMPath, err)
 		}
-		log.Donef(" - Done")
+		log.Donef("- Done")
 		fmt.Println()
 	}
 
@@ -64,7 +64,7 @@ func main() {
 		if err := release.SetReleaseNote(cfg.ReleaseNotes); err != nil {
 			failf("Failed to set release note, error: %s", err)
 		}
-		log.Donef(" - Done")
+		log.Donef("- Done")
 		fmt.Println()
 	}
 
@@ -89,7 +89,7 @@ func main() {
 		}
 	}
 
-	log.Donef(" - Done")
+	log.Donef("- Done")
 	fmt.Println()
 
 	log.Infof("Setting distribution store(s)")
@@ -113,7 +113,7 @@ func main() {
 		}
 	}
 
-	log.Donef(" - Done")
+	log.Donef("- Done")
 	fmt.Println()
 
 	log.Infof("Setting distribution tester(s)")
@@ -133,5 +133,5 @@ func main() {
 
 	}
 
-	log.Donef(" - Done")
+	log.Donef("- Done")
 }
