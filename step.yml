@@ -1,16 +1,14 @@
-title: AppCenter Android Deploy
-summary: Deploy your awesome Android app to AppCenter.
+title: AppCenter iOS Deploy
+summary: Deploy your awesome iOS app to App Center.
 description: |-
-  Deploy an Android application to [AppCenter](https://appcenter.ms).
+  Deploy an iOS application to [AppCenter](https://appcenter.ms).
 
-  If an `app_id` is provided, the APK file will be uploaded to the specified app on HockeyApp. 
-  Otherwise HockeyApp will decide whether it's a new app or an update to an existing app based on the package ID.
-website: https://github.com/bitrise-steplib/steps-appcenter-android
-source_code_url: https://github.com/bitrise-steplib/steps-appcenter-android
-support_url: https://github.com/bitrise-steplib/steps-appcenter-android/issues
+
+website: https://github.com/bitrise-steplib/steps-appcenter-deploy-ios
+source_code_url: https://github.com/bitrise-steplib/steps-appcenter-deploy-ios
+support_url: https://github.com/bitrise-steplib/steps-appcenter-deploy-ios/issues
 
 project_type_tags:
-  - android
   - xamarin
   - cordova
   - ionic
@@ -24,7 +22,7 @@ is_skippable: false
 
 toolkit:
   go:
-    package_name: github.com/bitrise-steplib/steps-hockeyapp-android-deploy
+    package_name: github.com/bitrise-steplib/steps-appcenter-deploy-ios
 
 inputs:
   - ipa_path: "$BITRISE_IPA_PATH"
