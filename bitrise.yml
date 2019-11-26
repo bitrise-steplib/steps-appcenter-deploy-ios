@@ -30,8 +30,8 @@ workflows:
           - content: |-
               #!/bin/bash
               set -ex
-              curl $IPA_DOWNLOAD_URL > $IPA_PATH
-              curl $DSYM_DOWNLOAD_URL > $DSYM_PATH
+              curl -f $IPA_DOWNLOAD_URL > $IPA_PATH
+              curl -f $DSYM_DOWNLOAD_URL > $DSYM_PATH
     - path::./:
         inputs:
           - ipa_path: $IPA_PATH
