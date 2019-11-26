@@ -1,15 +1,80 @@
-format_version: "8"
+format_version: "9"
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 
 workflows:
   test:
+    envs:
+    - IPA_DOWNLOAD_URL: https://raw.githubusercontent.com/bitrise-io/sample-artifacts/master/ipas/ios-xcode-8.0.ipa
+    - IPA_PATH: ios-xcode-8.0.ipa
+    - DSYM_DOWNLOAD_URL: https://raw.githubusercontent.com/bitrise-io/sample-artifacts/master/dsyms/ios-xcode-8.0.dSYM.zip
+    - DSYM_PATH: ios-xcode-8.0.dSYM.zip
+    - APPCENTER_APP_NAME: steps-appcenter-deploy-ios
+    - APPCENTER_APP_OWNER: app-center-bot
     steps:
+    - go-list:
+    - golint:
+    - errcheck:
+    - go-test:
+    - script:
+        title: Clean _tmp
+        inputs:
+          - content: rm -rf ./_tmp
+    - change-workdir:
+        title: Change workdir to _tmp
+        run_if: true
+        inputs:
+          - path: ./_tmp
+    - script:
+        title: Download testing resources
+        inputs:
+          - content: |-
+              #!/bin/bash
+              set -ex
+              curl $IPA_DOWNLOAD_URL > $IPA_PATH
+              curl $DSYM_DOWNLOAD_URL > $DSYM_PATH
     - path::./:
         inputs:
-          - ipa_path: "/Users/tamaspapik/Downloads/ios-xcode-8.0.ipa"
-          - api_token: $TOKEN
-          - owner_name: $OWNER
-          - app_name: $APPNAME
-          - debug: "no"
-          - distribution_group: "publictest\nCollaborators"
-          - dsym_zip_path: "/Users/tamaspapik/Downloads/ios-xcode-8.0.dSYM.zip"
+          - ipa_path: $IPA_PATH
+          - api_token: $API_TOKEN
+          - owner_name: $APPCENTER_APP_OWNER
+          - app_name: $APPCENTER_APP_NAME
+          - distribution_group: |-
+              Collaborators
+              Public
+          - dsym_zip_path: $DSYM_PATH
+          - release_notes: Bitrise step test
+    - script:
+        title: Check output envs
+        inputs:
+          - content: |-
+              #!/bin/bash
+              set -ex
+
+              if [ -z "$APPCENTER_DEPLOY_INSTALL_URL" ]
+                then
+                  echo "ERROR: APPCENTER_DEPLOY_INSTALL_URL variable empty"
+                  exit 1
+              fi
+
+              if [ -z "$APPCENTER_DEPLOY_DOWNLOAD_URL" ];
+              then
+                echo "ERROR: APPCENTER_DEPLOY_DOWNLOAD_URL variable empty"
+                exit 1
+              fi
+
+              if [ -z "$APPCENTER_PUBLIC_INSTALL_PAGE_URL" ]
+              then
+                echo "ERROR: APPCENTER_PUBLIC_INSTALL_PAGE_URL variable empty"
+                exit 1
+              fi
+
+              if [ "$APPCENTER_DEPLOY_STATUS" != "success" ]
+              then
+                echo "ERROR: APPCENTER_DEPLOY_STATUS variable is $APPCENTER_DEPLOY_STATUS"
+                exit 1
+              fi
+
+              envman add --key "APPCENTER_DEPLOY_INSTALL_URL" --value ""
+              envman add --key "APPCENTER_DEPLOY_DOWNLOAD_URL" --value ""
+              envman add --key "APPCENTER_PUBLIC_INSTALL_PAGE_URL" --value ""
+              envman add --key "APPCENTER_DEPLOY_STATUS" --value ""
