@@ -1,0 +1,132 @@
+title: AppCenter iOS Deploy
+summary: Deploy your awesome iOS app to App Center.
+description: |-
+  Deploy an iOS application to [AppCenter](https://appcenter.ms).
+
+
+website: https://github.com/bitrise-steplib/steps-appcenter-deploy-ios
+source_code_url: https://github.com/bitrise-steplib/steps-appcenter-deploy-ios
+support_url: https://github.com/bitrise-steplib/steps-appcenter-deploy-ios/issues
+
+project_type_tags:
+  - xamarin
+  - cordova
+  - ionic
+  - react-native
+  - flutter
+type_tags:
+  - deploy
+
+is_always_run: false
+is_skippable: false
+
+toolkit:
+  go:
+    package_name: github.com/bitrise-steplib/steps-appcenter-deploy-ios
+
+inputs:
+  - ipa_path: "$BITRISE_IPA_PATH"
+    opts:
+      title: "IPA path"
+      summary: Path to a binary file
+      description: Path to a binary file
+      is_required: true
+  - dsym_zip_path: "$BITRISE_DSYM_PATH"
+    opts:
+      title: "DSYM.zip file path"
+      summary: Path to a DSYM.zip file
+      description: Path to a DSYM.zip file
+  - api_token:
+    opts:
+      title: "API Token"
+      summary: App Center API token
+      description: App Center API token
+      is_required: true
+      is_sensitive: true
+  - owner_name:
+    opts:
+      title: "Owner name"
+      summary: Owner of the App Center app
+      description: |-
+        Owner of the App Center app.
+
+        For an app owned by a user, the URL in App Center might look like https://appcenter.ms/users/JoshuaWeber/apps/APIExample.
+        
+        Here, the {owner_name} is JoshuaWeber. For an app owned by an org, the URL might be
+        https://appcenter.ms/orgs/Microsoft/apps/APIExample and the {owner_name} would be Microsoft
+
+      is_required: true
+  - app_name:
+    opts:
+      title: "App name"
+      summary: The name of the App Center app
+      description: |-
+        The name of the App Center app.
+
+        For an app owned by a user, the URL in App Center might look like https://appcenter.ms/users/JoshuaWeber/apps/APIExample.
+        
+        Here, the {app_name} is ApiExample.
+      is_required: true
+  - distribution_group:
+    opts:
+      title: Distribution groups
+      summary: User groups you wish to distribute the app. One group name per line.
+      description: User groups you wish to distribute the app. One group name per line.
+  - distribution_store:
+    opts:
+      title: Distribution stores
+      summary: Distribution stores you wish to distribute the app. One store name per line.
+      description: Distribution stores you wish to distribute the app. One store name per line.
+  - distribution_tester:
+    opts:
+      title: Testers
+      summary: List of individual testers. One email per line.
+      description: List of individual testers. One email per line.
+  - release_notes: "Release notes"
+    opts:
+      title: "Release notes for the deployed artifact."
+      summary: Release notes text
+      description: Release notes text
+  - notify_testers: "yes"
+    opts:
+      title: "Notify Testers"
+      summary: Send notification email to testers and distribution groups.
+      description: Send notification email to testers and distribution groups.
+      value_options: ["yes", "no"]
+      is_required: true
+  - mandatory: "no"
+    opts:
+      title: "Mandatory update"
+      summary: Enforce installation of distribution version. Requires SDK integration.
+      description: Enforce installation of distribution version. Requires SDK integration.
+      value_options: ["no", "yes"]
+      is_required: true
+  - debug: "no"
+    opts:
+      title: "Debug"
+      summary: Enable verbose logs
+      description: Enable verbose logs
+      value_options: ["no", "yes"]
+      is_required: true
+
+outputs:
+  - APPCENTER_DEPLOY_STATUS:
+    opts:
+      title: Deployment status
+      summary: "Deployment result: 'success' or 'failed'"
+      description: "Deployment result: 'success' or 'failed'"
+  - APPCENTER_DEPLOY_INSTALL_URL: ""
+    opts:
+      title: Install page URL
+      summary: Install page URL of the newly deployed version
+      description: Install page URL of the newly deployed version
+  - APPCENTER_DEPLOY_DOWNLOAD_URL: ""
+    opts:
+      title: Download URL
+      summary: Download URL of the newly deployed version
+      description: Download URL of the newly deployed version
+  - APPCENTER_PUBLIC_INSTALL_PAGE_URL: ""
+    opts:
+      title: Public install page URL
+      summary: Public install page URL of the latest version
+      description: Public install page URL of the latest version
