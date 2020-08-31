@@ -130,3 +130,8 @@ outputs:
       title: Public install page URL
       summary: Public install page URL of the latest version
       description: Public install page URL of the latest version
+  - APPCENTER_DEPLOY_RELEASE_ID:
+    opts:
+      title: Release ID
+      summary: ID of the new release for later retrieval via App Center APIs.
+      description: ID of the new release for later retrieval via App Center APIs.

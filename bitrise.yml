@@ -75,7 +75,14 @@ workflows:
                 exit 1
               fi
 
+              if [ -z $APPCENTER_DEPLOY_RELEASE_ID ];
+              then
+                echo "ERROR: APPCENTER_DEPLOY_RELEASE_ID variable empty"
+                exit 1
+              fi
+
               envman add --key "APPCENTER_DEPLOY_INSTALL_URL" --value ""
               envman add --key "APPCENTER_DEPLOY_DOWNLOAD_URL" --value ""
               envman add --key "APPCENTER_PUBLIC_INSTALL_PAGE_URL" --value ""
               envman add --key "APPCENTER_DEPLOY_STATUS" --value ""
+              envman add --key "APPCENTER_DEPLOY_RELEASE_ID" --value ""
