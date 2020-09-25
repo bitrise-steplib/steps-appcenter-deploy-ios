@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"strconv"
 
 	"github.com/bitrise-io/appcenter"
 	"github.com/bitrise-io/go-steputils/stepconf"
@@ -156,6 +157,7 @@ func main() {
 		statusEnvKey:                    "success",
 		"APPCENTER_DEPLOY_INSTALL_URL":  release.InstallURL,
 		"APPCENTER_DEPLOY_DOWNLOAD_URL": release.DownloadURL,
+		"APPCENTER_DEPLOY_RELEASE_ID": strconv.Itoa(release.ID),
 	}
 
 	if len(publicGroup) > 0 {
