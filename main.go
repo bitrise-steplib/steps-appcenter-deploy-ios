@@ -172,8 +172,13 @@ func main() {
 		"APPCENTER_DEPLOY_DOWNLOAD_URL": release.DownloadURL,
 		"APPCENTER_DEPLOY_RELEASE_ID":   strconv.Itoa(release.ID),
 	}
-	outputs["APPCENTER_PUBLIC_INSTALL_PAGE_URL"] = fmt.Sprintf("https://install.appcenter.ms/users/%s/apps/%s/distribution_groups/%s", cfg.OwnerName, cfg.AppName, publicGroup[0])
-	outputs["APPCENTER_PUBLIC_INSTALL_PAGE_URLS"] = strings.Join(groupUrls, ", ")
+
+	if len(publicGroup) > 0 {
+		outputs["APPCENTER_PUBLIC_INSTALL_PAGE_URL"] = fmt.Sprintf("https://install.appcenter.ms/users/%s/apps/%s/distribution_groups/%s", cfg.OwnerName, cfg.AppName, publicGroup[0])
+		outputs["APPCENTER_PUBLIC_INSTALL_PAGE_URLS"] = strings.Join(groupUrls, ", ")
+	} else {
+		outputs["APPCENTER_PUBLIC_INSTALL_PAGE_URL"] = ""
+	}
 
 	for key, value := range outputs {
 		log.Printf("- %s: %s", key, value)
