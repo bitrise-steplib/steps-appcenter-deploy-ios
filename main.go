@@ -161,25 +161,19 @@ func main() {
 
 	log.Infof("Exporting outputs")
 
+	var groupUrls []string
+	for _, groupName := range publicGroup {
+		groupUrls = append(groupUrls, fmt.Sprintf("https://install.appcenter.ms/users/%s/apps/%s/distribution_groups/%s", cfg.OwnerName, cfg.AppName, groupName))
+	}
+
 	var outputs = map[string]string{
 		statusEnvKey:                    "success",
 		"APPCENTER_DEPLOY_INSTALL_URL":  release.InstallURL,
 		"APPCENTER_DEPLOY_DOWNLOAD_URL": release.DownloadURL,
 		"APPCENTER_DEPLOY_RELEASE_ID":   strconv.Itoa(release.ID),
 	}
-
-	if len(publicGroup) == 1 {
-		outputs["APPCENTER_PUBLIC_INSTALL_PAGE_URL"] = fmt.Sprintf("https://install.appcenter.ms/users/%s/apps/%s/distribution_groups/%s", cfg.OwnerName, cfg.AppName, publicGroup[0])
-	}
-
-	if len(publicGroup) > 1 {
-		var groupUrls []string
-		for _, groupName := range publicGroup {
-			groupUrls = append(groupUrls, fmt.Sprintf("https://install.appcenter.ms/users/%s/apps/%s/distribution_groups/%s", cfg.OwnerName, cfg.AppName, groupName))
-		}
-
-		outputs["APPCENTER_PUBLIC_INSTALL_PAGE_URLS"] = strings.Join(groupUrls, ", ")
-	}
+	outputs["APPCENTER_PUBLIC_INSTALL_PAGE_URL"] = fmt.Sprintf("https://install.appcenter.ms/users/%s/apps/%s/distribution_groups/%s", cfg.OwnerName, cfg.AppName, publicGroup[0])
+	outputs["APPCENTER_PUBLIC_INSTALL_PAGE_URLS"] = strings.Join(groupUrls, ", ")
 
 	for key, value := range outputs {
 		log.Printf("- %s: %s", key, value)
