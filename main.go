@@ -69,13 +69,6 @@ func main() {
 
 	releaseAPI := appcenter.CreateReleaseAPI(api, release, releaseOptions)
 
-	log.Infof("Setting distribution group(s)")
-
-	err = releaseAPI.AddGroupsToRelease(releaseOptions.GroupNames)
-	if err != nil {
-		failf("Failed to set groups on the release %s, groups: %s, error: %s", release.ID, releaseOptions.GroupNames, err)
-	}
-
 	if len(cfg.DSYMPath) > 0 {
 		log.Infof("Uploading DSYM zip")
 		if err := releaseAPI.UploadSymbol(cfg.DSYMPath); err != nil {
@@ -94,7 +87,16 @@ func main() {
 		fmt.Println()
 	}
 
-	log.Infof("Gatehering public group(s)")
+	log.Infof("Setting distribution group(s)")
+
+	err = releaseAPI.AddGroupsToRelease(releaseOptions.GroupNames)
+	if err != nil {
+		failf("Failed to set groups on the release %s, groups: %s, error: %s", release.ID, releaseOptions.GroupNames, err)
+	}
+	log.Donef("- Done")
+	fmt.Println()
+
+	log.Infof("Gathering public group(s)")
 
 	var publicGroup []string
 	for _, groupName := range releaseOptions.GroupNames {
